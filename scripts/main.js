@@ -11,6 +11,8 @@ var LoginComponent = require('./components/LoginComponent');
 var BooksComponent = require('./components/BooksComponent');
 var ElectronicsComponent = require('./components/ElectronicsComponent');
 var ClothingComponent = require('./components/ClothingComponent');
+var NewestComponent = require('./components/NewestProductsComponent');
+var DealsComponent = require('./components/DealsComponent');
 var RegisterComponent = require('./components/RegisterComponent');
 
 Parse.initialize('jprLej7UKqALV0cZobl6V7EigGHftDx8BBZ96CcK','TBxaUeW5gVxNfAsWJHtBMEtpRkmffxVNUQwIXB62');
@@ -24,6 +26,8 @@ var Router = Backbone.Router.extend({
 		'category/books': 'books',
 		'category/electronics': 'electronics',
 		'category/clothing': 'clothing',
+		'category/newest': 'newest',
+		'category/deals': 'deals',
 		'login': 'login',
 		'register': 'register'
 	},
@@ -41,6 +45,12 @@ var Router = Backbone.Router.extend({
 	},
 	clothing: function() {
 		React.render(<ClothingComponent />, app);
+	},
+	newest: function() {
+		React.render(<NewestComponent />, app);
+	},
+	deals: function() {
+		React.render(<DealsComponent />, app);
 	},
 	login: function() {
 		React.render(<LoginComponent router={r} />, app);

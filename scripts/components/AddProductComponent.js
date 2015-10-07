@@ -32,7 +32,7 @@ module.exports = React.createClass({
 						</div>
 						<div className="row">
 							<div className="input-field col s6">
-								<input type="number" ref="price" className="validate" />
+								<input type="number" step=".01" ref="price" className="validate" />
 								<label>Price</label>
 							</div>
 							<div className="input-field col s6">
@@ -58,14 +58,14 @@ module.exports = React.createClass({
 		var newProduct = new ProductModel({
 			product: this.refs.productName.getDOMNode().value,
 			description: this.refs.description.getDOMNode().value,
-			price: this.refs.price.getDOMNode().value,
+			price: parseFloat(this.refs.price.getDOMNode().value),
 			type: this.refs.type.getDOMNode().value,
 			user: Parse.User.current()
 		})
 		newProduct.save();
-			this.refs.productName.setDOMNode().value === '';
-			this.refs.description.setDOMNode().value === '';
-			this.refs.price.setDOMNode().value === '';
-			this.refs.type.setDOMNode().value === '';
+			this.refs.productName.getDOMNode().value = '';
+			this.refs.description.getDOMNode().value = '';
+			this.refs.price.getDOMNode().value = '';
+			this.refs.type.getDOMNode().value = '';
 	}
 });

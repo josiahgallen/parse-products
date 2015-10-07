@@ -32598,7 +32598,7 @@ module.exports = React.createClass({
 						React.createElement(
 							'div',
 							{ className: 'input-field col s6' },
-							React.createElement('input', { type: 'number', ref: 'price', className: 'validate' }),
+							React.createElement('input', { type: 'number', step: '.01', ref: 'price', className: 'validate' }),
 							React.createElement(
 								'label',
 								null,
@@ -32653,19 +32653,19 @@ module.exports = React.createClass({
 		var newProduct = new ProductModel({
 			product: this.refs.productName.getDOMNode().value,
 			description: this.refs.description.getDOMNode().value,
-			price: this.refs.price.getDOMNode().value,
+			price: parseFloat(this.refs.price.getDOMNode().value),
 			type: this.refs.type.getDOMNode().value,
 			user: Parse.User.current()
 		});
 		newProduct.save();
-		this.refs.productName.setDOMNode().value === '';
-		this.refs.description.setDOMNode().value === '';
-		this.refs.price.setDOMNode().value === '';
-		this.refs.type.setDOMNode().value === '';
+		this.refs.productName.getDOMNode().value = '';
+		this.refs.description.getDOMNode().value = '';
+		this.refs.price.getDOMNode().value = '';
+		this.refs.type.getDOMNode().value = '';
 	}
 });
 
-},{"../models/ParseProductModel.js":169,"react":159}],161:[function(require,module,exports){
+},{"../models/ParseProductModel.js":171,"react":159}],161:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -32757,7 +32757,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/ParseProductModel.js":169,"react":159}],162:[function(require,module,exports){
+},{"../models/ParseProductModel.js":171,"react":159}],162:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -32849,7 +32849,99 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/ParseProductModel.js":169,"react":159}],163:[function(require,module,exports){
+},{"../models/ParseProductModel.js":171,"react":159}],163:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var ProductModel = require('../models/ParseProductModel.js');
+
+module.exports = React.createClass({
+	displayName: 'exports',
+
+	getInitialState: function getInitialState() {
+		return { newP: [] };
+	},
+	componentWillMount: function componentWillMount() {
+		var _this = this;
+
+		var query = new Parse.Query(ProductModel);
+		query.ascending('price').limit(10).find().then(function (b) {
+			_this.setState({ newP: b });
+		}, function (err) {
+			console.log(err);
+		});
+	},
+	render: function render() {
+		var newPElements = this.state.newP.map(function (np) {
+			return React.createElement(
+				'tr',
+				null,
+				React.createElement(
+					'td',
+					null,
+					np.get('product')
+				),
+				React.createElement(
+					'td',
+					null,
+					np.get('description')
+				),
+				React.createElement(
+					'td',
+					null,
+					'$' + np.get('price')
+				)
+			);
+		});
+		return React.createElement(
+			'div',
+			{ className: 'container' },
+			React.createElement(
+				'div',
+				{ className: 'row' },
+				React.createElement(
+					'h1',
+					null,
+					'Hot Deals'
+				),
+				React.createElement(
+					'table',
+					{ className: 'striped' },
+					React.createElement(
+						'thead',
+						null,
+						React.createElement(
+							'tr',
+							null,
+							React.createElement(
+								'th',
+								{ 'data-field': 'id' },
+								'Product Name'
+							),
+							React.createElement(
+								'th',
+								{ 'data-field': 'name' },
+								'Product Description'
+							),
+							React.createElement(
+								'th',
+								{ 'data-field': 'price' },
+								'Item Price'
+							)
+						)
+					),
+					React.createElement(
+						'tbody',
+						null,
+						newPElements
+					)
+				)
+			)
+		);
+	}
+});
+
+},{"../models/ParseProductModel.js":171,"react":159}],164:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -32941,7 +33033,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/ParseProductModel.js":169,"react":159}],164:[function(require,module,exports){
+},{"../models/ParseProductModel.js":171,"react":159}],165:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -32966,7 +33058,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"react":159}],165:[function(require,module,exports){
+},{"react":159}],166:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -33060,7 +33152,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"react":159}],166:[function(require,module,exports){
+},{"react":159}],167:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -33111,6 +33203,22 @@ module.exports = React.createClass({
 				'a',
 				{ href: '#category/clothing' },
 				'Clothing'
+			)
+		), React.createElement(
+			'li',
+			{ key: 'newest', className: currentPage === 'category/newest' ? 'active' : '' },
+			React.createElement(
+				'a',
+				{ href: '#category/newest' },
+				'New Items'
+			)
+		), React.createElement(
+			'li',
+			{ key: 'deals', className: currentPage === 'category/deals' ? 'active' : '' },
+			React.createElement(
+				'a',
+				{ href: '#category/deals' },
+				'Hot Deals'
 			)
 		)];
 
@@ -33176,7 +33284,109 @@ module.exports = React.createClass({
 	}
 });
 
-},{"backbone":1,"react":159}],167:[function(require,module,exports){
+},{"backbone":1,"react":159}],168:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var ProductModel = require('../models/ParseProductModel.js');
+
+module.exports = React.createClass({
+	displayName: 'exports',
+
+	getInitialState: function getInitialState() {
+		return { newP: [] };
+	},
+	componentWillMount: function componentWillMount() {
+		var _this = this;
+
+		var query = new Parse.Query(ProductModel);
+		query.descending('createdAt').limit(10).find().then(function (b) {
+			_this.setState({ newP: b });
+		}, function (err) {
+			console.log(err);
+		});
+	},
+	render: function render() {
+		var newPElements = this.state.newP.map(function (np) {
+			return React.createElement(
+				'tr',
+				null,
+				React.createElement(
+					'td',
+					null,
+					np.get('product')
+				),
+				React.createElement(
+					'td',
+					null,
+					np.get('description')
+				),
+				React.createElement(
+					'td',
+					null,
+					'$' + np.get('price')
+				),
+				React.createElement(
+					'td',
+					null,
+					np.get('createdAt').toDateString()
+				)
+			);
+		});
+		return React.createElement(
+			'div',
+			{ className: 'container' },
+			React.createElement(
+				'div',
+				{ className: 'row' },
+				React.createElement(
+					'h1',
+					null,
+					'New Products'
+				),
+				React.createElement(
+					'table',
+					{ className: 'striped' },
+					React.createElement(
+						'thead',
+						null,
+						React.createElement(
+							'tr',
+							null,
+							React.createElement(
+								'th',
+								{ 'data-field': 'id' },
+								'Product Name'
+							),
+							React.createElement(
+								'th',
+								{ 'data-field': 'name' },
+								'Product Description'
+							),
+							React.createElement(
+								'th',
+								{ 'data-field': 'price' },
+								'Item Price'
+							),
+							React.createElement(
+								'th',
+								{ 'data-field': 'date' },
+								'Date Added'
+							)
+						)
+					),
+					React.createElement(
+						'tbody',
+						null,
+						newPElements
+					)
+				)
+			)
+		);
+	}
+});
+
+},{"../models/ParseProductModel.js":171,"react":159}],169:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -33274,7 +33484,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"react":159}],168:[function(require,module,exports){
+},{"react":159}],170:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var Backbone = require('backbone');
@@ -33288,6 +33498,8 @@ var LoginComponent = require('./components/LoginComponent');
 var BooksComponent = require('./components/BooksComponent');
 var ElectronicsComponent = require('./components/ElectronicsComponent');
 var ClothingComponent = require('./components/ClothingComponent');
+var NewestComponent = require('./components/NewestProductsComponent');
+var DealsComponent = require('./components/DealsComponent');
 var RegisterComponent = require('./components/RegisterComponent');
 
 Parse.initialize('jprLej7UKqALV0cZobl6V7EigGHftDx8BBZ96CcK', 'TBxaUeW5gVxNfAsWJHtBMEtpRkmffxVNUQwIXB62');
@@ -33301,6 +33513,8 @@ var Router = Backbone.Router.extend({
 		'category/books': 'books',
 		'category/electronics': 'electronics',
 		'category/clothing': 'clothing',
+		'category/newest': 'newest',
+		'category/deals': 'deals',
 		'login': 'login',
 		'register': 'register'
 	},
@@ -33319,6 +33533,12 @@ var Router = Backbone.Router.extend({
 	clothing: function clothing() {
 		React.render(React.createElement(ClothingComponent, null), app);
 	},
+	newest: function newest() {
+		React.render(React.createElement(NewestComponent, null), app);
+	},
+	deals: function deals() {
+		React.render(React.createElement(DealsComponent, null), app);
+	},
 	login: function login() {
 		React.render(React.createElement(LoginComponent, { router: r }), app);
 	},
@@ -33332,14 +33552,14 @@ Backbone.history.start();
 
 React.render(React.createElement(NavigationComponent, { router: r }), document.getElementById('nav'));
 
-},{"./components/AddProductComponent":160,"./components/BooksComponent":161,"./components/ClothingComponent":162,"./components/ElectronicsComponent":163,"./components/HomeComponent":164,"./components/LoginComponent":165,"./components/NavigationComponent":166,"./components/RegisterComponent":167,"backbone":1,"jquery":4,"react":159}],169:[function(require,module,exports){
+},{"./components/AddProductComponent":160,"./components/BooksComponent":161,"./components/ClothingComponent":162,"./components/DealsComponent":163,"./components/ElectronicsComponent":164,"./components/HomeComponent":165,"./components/LoginComponent":166,"./components/NavigationComponent":167,"./components/NewestProductsComponent":168,"./components/RegisterComponent":169,"backbone":1,"jquery":4,"react":159}],171:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
 	className: 'product'
 });
 
-},{}]},{},[168])
+},{}]},{},[170])
 
 
 //# sourceMappingURL=bundle.js.map
