@@ -30,7 +30,7 @@ module.exports = React.createClass({
 
 		return (
 			<div className="nav-wrapper">
-				<a href="#" className="brand-logo left">Login Example</a>
+				<a href="#" className="brand-logo left">Parse Products Page</a>
 				<ul id="nav-mobile" className="right">
 					{links}
 				</ul>

@@ -1,4 +1,5 @@
 var React = require('react');
+var ProductModel = require('../models/ParseProductModel.js');
 
 module.exports = React.createClass({
 	getInitialState: function() {
@@ -19,23 +20,23 @@ module.exports = React.createClass({
 						{errorElement}
 						<div className="row">
 							<div className="input-field col s12">
-								<input type="text" ref="email" className="validate" />
+								<input type="text" ref="productName" className="validate" />
 								<label>Product Name</label>
 							</div>
 						</div>
 						<div className="row">
 							<div className="input-field col s12">
-								<textarea id="textarea1" className="materialize-textarea"></textarea>
+								<textarea id="textarea1" ref="description" className="materialize-textarea"></textarea>
 								<label>Description</label>
 							</div>
 						</div>
 						<div className="row">
 							<div className="input-field col s6">
-								<input type="number" className="validate" />
+								<input type="number" ref="price" className="validate" />
 								<label>Price</label>
 							</div>
 							<div className="input-field col s6">
-								<select className="browser-default">
+								<select className="browser-default" ref="type">
 									<option defaultValue="" disabled selected>Category</option>
 									<option defaultValue="books">Books</option>
 									<option defaultValue="electronics">Electronics</option>
@@ -53,5 +54,18 @@ module.exports = React.createClass({
 	},
 	onAddProduct: function(e) {
 		e.preventDefault();
+		console.log('new product added');
+		var newProduct = new ProductModel({
+			product: this.refs.productName.getDOMNode().value,
+			description: this.refs.description.getDOMNode().value,
+			price: this.refs.price.getDOMNode().value,
+			type: this.refs.type.getDOMNode().value,
+			user: Parse.User.current()
+		})
+		newProduct.save();
+			this.refs.productName.setDOMNode().value === '';
+			this.refs.description.setDOMNode().value === '';
+			this.refs.price.setDOMNode().value === '';
+			this.refs.type.setDOMNode().value === '';
 	}
 });
