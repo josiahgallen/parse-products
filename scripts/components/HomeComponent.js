@@ -59,7 +59,7 @@ module.exports = React.createClass({
 		e.preventDefault();
 		console.log('Looking.....');
 		var query = new Parse.Query(ProductModel);
-		query.equalTo('product', this.refs.productName.getDOMNode().value)
+		query.startsWith('product', this.refs.productName.getDOMNode().value)
 		.find().then(
 			(s) => {
 				this.setState({search: s});
