@@ -12,6 +12,7 @@ module.exports = React.createClass({
 		var searchElements = this.state.search.map(function(s) {
 			return(
 				<tr>
+					<td>{s.get('type')}</td>
             		<td>{s.get('product')}</td>
             		<td>{s.get('description')}</td>
             		<td>{'$'+s.get('price')}</td>
@@ -41,6 +42,7 @@ module.exports = React.createClass({
 						<table className="striped">
         					<thead>
           						<tr>
+          							<th data-field="type">Category</th>
             	  					<th data-field="id">Product Name</th>
             	  					<th data-field="name">Product Description</th>
             	  					<th data-field="price">Item Price</th>

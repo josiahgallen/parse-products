@@ -32767,7 +32767,10 @@ module.exports = React.createClass({
 	displayName: 'exports',
 
 	getInitialState: function getInitialState() {
-		return { clothing: [] };
+		return {
+			clothing: [],
+			pagination: 1
+		};
 	},
 	componentWillMount: function componentWillMount() {
 		var _this = this;
@@ -32775,6 +32778,19 @@ module.exports = React.createClass({
 		var query = new Parse.Query(ProductModel);
 		query.equalTo('type', 'Clothing').find().then(function (c) {
 			_this.setState({ clothing: c });
+			var pageArray = [];
+			for (var i = 1; i <= _this.state.clothing.length; i++) {
+				pageArray.push([i]);
+			}
+			console.log(pageArray.length);
+			var pages = Math.ceil(pageArray.length / 10);
+			_this.setState({ pagination: pages });
+			console.log(_this.state.pagination);
+			query.equalTo('type', 'Clothing').limit(10).find().then(function (c) {
+				_this.setState({ clothing: c });
+			}, function (err) {
+				console.log(err);
+			});
 		}, function (err) {
 			console.log(err);
 		});
@@ -32801,6 +32817,18 @@ module.exports = React.createClass({
 				)
 			);
 		});
+		var linkElements = [];
+		for (var i = 1; i <= this.state.pagination; i++) {
+			linkElements.push(React.createElement(
+				'li',
+				{ className: 'waves-effect' },
+				React.createElement(
+					'a',
+					{ href: '#!', key: [i], onClick: this.newTen },
+					[i]
+				)
+			));
+		}
 		return React.createElement(
 			'div',
 			{ className: 'container' },
@@ -32844,8 +32872,74 @@ module.exports = React.createClass({
 						clothingElements
 					)
 				)
+			),
+			React.createElement(
+				'ul',
+				{ className: 'pagination' },
+				React.createElement(
+					'li',
+					{ className: 'disabled' },
+					React.createElement(
+						'a',
+						{ href: '#!' },
+						React.createElement(
+							'i',
+							{ className: 'material-icons' },
+							'chevron_left'
+						)
+					)
+				),
+				linkElements,
+				React.createElement(
+					'li',
+					{ className: 'waves-effect' },
+					React.createElement(
+						'a',
+						{ href: '#!' },
+						React.createElement(
+							'i',
+							{ className: 'material-icons' },
+							'chevron_right'
+						)
+					)
+				)
 			)
 		);
+	},
+	newTen: function newTen(e) {
+		var _this2 = this;
+
+		e.preventDefault();
+		var pageQuery = new Parse.Query(ProductModel);
+		console.log(this.state.pagination);
+		var skipThis = this.state.pagination - 1;
+		if (this.key > 1) {
+			pageQuery.equalTo('type', 'Clothing').skip(skipThis * 10).limit(10).find().then(function (pn) {
+				_this2.setState({ clothing: pn });
+			}, function (err) {
+				console.log(err);
+			});
+		} else {
+			var query = new Parse.Query(ProductModel);
+			query.equalTo('type', 'Clothing').find().then(function (c) {
+				_this2.setState({ clothing: c });
+				var pageArray = [];
+				for (var i = 1; i <= _this2.state.clothing.length; i++) {
+					pageArray.push([i]);
+				}
+				console.log(pageArray.length);
+				var pages = Math.ceil(pageArray.length / 10);
+				_this2.setState({ pagination: pages });
+				console.log(_this2.state.pagination);
+				query.equalTo('type', 'Clothing').limit(10).find().then(function (c) {
+					_this2.setState({ clothing: c });
+				}, function (err) {
+					console.log(err);
+				});
+			}, function (err) {
+				console.log(err);
+			});
+		}
 	}
 });
 
@@ -33055,6 +33149,11 @@ module.exports = React.createClass({
 				React.createElement(
 					'td',
 					null,
+					s.get('type')
+				),
+				React.createElement(
+					'td',
+					null,
 					s.get('product')
 				),
 				React.createElement(
@@ -33127,6 +33226,11 @@ module.exports = React.createClass({
 							React.createElement(
 								'tr',
 								null,
+								React.createElement(
+									'th',
+									{ 'data-field': 'type' },
+									'Category'
+								),
 								React.createElement(
 									'th',
 									{ 'data-field': 'id' },
